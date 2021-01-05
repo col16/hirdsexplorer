@@ -7,14 +7,33 @@ import SEO from "../components/seo"
 const IndexPage = () => (
   <div>
     <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
+
+    <div class="flex pb-96">
+      <div class="flex-none w-96 p-2">
+
+        <div>
+          <div><span class="font-bold"><label for="ari_selector">Average Return Interval</label></span> (or <a href="#">use AEP</a>)</div>
+          <div class="pl-3">
+            <input type="range" id="ari_selector" min="0" max="11" value="5" class="mr-2" />
+            <label for="ari_selector">100 years</label>
+          </div>
+        </div>
+
+        <div>
+          <div class="font-bold"><label for="duration_selector">Duration</label></div>
+          <div class="pl-3">
+            <input type="range" id="duration_selector" min="0" max="11" value="5" class="mr-2" />
+            <label for="duration_selector">24 hours</label>
+          </div>
+        </div>
+        
+
+      </div>
+      <div class="flex-grow h-16 bg-gray-200">
+        map
+      </div>
     </div>
-    <Link to="/page-2/">Go to page 2</Link> <br />
-    <Link to="/using-typescript/">Go to "Using TypeScript"</Link>
+
   </div>
 )
 
