@@ -1,9 +1,14 @@
-import { createStore } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
 import initialState from './initialState'
-import rootReducer from './reducers/index'
 
-export default createStore(
-  rootReducer,
-  initialState,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+import ARIReducer from "./reducers/ARI";
+
+const store = configureStore({
+  preloadedState: initialState,
+  reducer: {
+    // Code that changes different parts of the state based on actions dispatched
+    ARI_years: ARIReducer,
+  }
+})
+
+export default store;

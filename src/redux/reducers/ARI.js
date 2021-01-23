@@ -1,14 +1,17 @@
+import { createSlice } from '@reduxjs/toolkit'
+
 const initialState = 100;
 
-const setARI = (state = initialState, action) => {
-  switch (action.type) {
-    case 'core/ARI_years_change': {
-      return action.payload
-    }
-    default: {
-      return state;
-    }
+const ARIslice = createSlice({
+  name: 'core',
+  initialState,
+  reducers: {
+    ARI_years_change(state, action) {
+      return action.payload;
+    },
   }
-};
+})
 
-export default setARI;
+export const { ARI_years_change } = ARIslice.actions
+
+export default ARIslice.reducer

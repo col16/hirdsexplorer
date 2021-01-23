@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from 'react-redux'
-import { ARI_years_change } from '../redux/actions'
+import { ARI_years_change } from '../redux/reducers/ARI'
 
 
 class ARI extends React.Component {
