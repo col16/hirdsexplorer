@@ -2,6 +2,21 @@ import React from "react"
 import { connect } from 'react-redux'
 import { ARI_years_change } from '../redux/reducers/ARI'
 
+const allARIValues = [
+  1.58,
+  2,
+  5,
+  10,
+  20,
+  30,
+  40,
+  50,
+  60,
+  80,
+  100,
+  250,
+]
+
 
 class ARI extends React.Component {
   constructor(props) {
@@ -10,7 +25,7 @@ class ARI extends React.Component {
   }
 
   handleChange = (event) => {
-    this.props.ARI_years_change(event.target.value);
+    this.props.ARI_years_change(allARIValues[event.target.value]);
   }
 
   render() {
