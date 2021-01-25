@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import initialState from './initialState'
 
-import ARIReducer from "./reducers/ARI";
+import CoreReducer from "./reducers/core";
+import HIRDSv4Reducer from "./reducers/core";
 
 const store = configureStore({
-  preloadedState: initialState,
   reducer: {
     // Code that changes different parts of the state based on actions dispatched
-    ARI_years: ARIReducer,
+    core: CoreReducer,
+    hirdsv4: HIRDSv4Reducer,
   }
 })
 

@@ -1,8 +1,8 @@
 import React from "react"
 import { connect } from 'react-redux'
-import { ARI_years_change } from '../redux/reducers/ARI'
+import { ARIYearsChange } from '../redux/reducers/core'
 
-const allARIValues = [
+const allARIInYearsValues = [
   1.58,
   2,
   5,
@@ -18,20 +18,17 @@ const allARIValues = [
 ]
 
 
+
 class ARI extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   handleChange = (event) => {
-    this.props.ARI_years_change(allARIValues[event.target.value]);
+    this.props.ARIYearsChange(allARIInYearsValues[event.target.value]);
   }
 
+  //defaultValue should come from value of state
   render() {
     return <div>
       <div>
-        <span className="font-bold"><label htmlFor="ari_selector">Average Return Interval</label></span> (or <a href="#">use AEP</a>)
+        <span className="font-bold"><label htmlFor="ari_selector">Average Return Interval</label></span> (or <a href="#a">use AEP</a>)
       </div>
       <div className="pl-3">
         <input type="range" id="ari_selector" min="0" max="11" defaultValue="5" className="mr-2" onChange={this.handleChange} />
@@ -43,10 +40,10 @@ class ARI extends React.Component {
 
 
 const mapStateToProps = state => {
-  return { ARI_years: state.ARI_years };
+  return { ARI_years: state.core.ARI_years };
 };
 
 export default connect(
   mapStateToProps,
-  { ARI_years_change }
+  { ARIYearsChange }
 )(ARI);
