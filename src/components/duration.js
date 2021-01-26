@@ -17,12 +17,27 @@ const allDurationInHoursValues = [
   120,
 ]
 
+let friendlyDurationValues = {
+  1: '1 hour',
+  2: '2 hours',
+  6: '6 hours',
+  12: '12 hours',
+  24: '24 hours',
+  48: '48 hours (2 days)',
+  72: '72 hours (3 days)',
+  96: '96 hours (4 days)',
+  120: '120 hours (5 days)',
+}
+friendlyDurationValues[10/60] = '10 minutes';
+friendlyDurationValues[20/60] = '20 minutes';
+friendlyDurationValues[30/60] = '30 minutes';
+
 
 class ARI extends React.Component {
   handleChange = (event) => {
     this.props.durationHoursChange(allDurationInHoursValues[event.target.value]);
   }
-  
+
   //defaultValue should come from value of state
   render() {
     return <div>
@@ -31,7 +46,7 @@ class ARI extends React.Component {
       </div>
       <div className="pl-3">
         <input type="range" id="ari_selector" min="0" max="11" defaultValue="5" className="mr-2" onChange={this.handleChange} />
-        <label htmlFor="ari_selector">{ this.props.duration_hours } hours</label>
+        <label htmlFor="ari_selector">{ friendlyDurationValues[this.props.duration_hours] }</label>
       </div>
     </div>
   }
