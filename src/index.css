@@ -3,10 +3,16 @@
 @tailwind utilities;
 
 @layer base {
-  a {
+  a, .link {
     @apply text-blue-700;
   }
-  a:hover {
+  a:hover, .link:hover {
     text-decoration: underline;
+  }
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
   }
 }
