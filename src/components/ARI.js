@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from 'react-redux'
-import { ARIYearsChange } from '../redux/reducers/core'
+import { ARIYearsChange, ARIAEPdisplayToggle } from '../redux/reducers/core'
 
 const allARIInYearsValues = [
   1.58,
@@ -17,22 +17,49 @@ const allARIInYearsValues = [
   250,
 ]
 
+const equivalentAEPValues = {
+  1.58: 63.3,
+  2: 50,
+  5: 20,
+  10: 10,
+  20: 5,
+  30: 3.3,
+  40: 2.5,
+  50: 2,
+  60: 1.7,
+  80: 1.2,
+  100: 1,
+  250: 0.4,
+}
 
 
 class ARI extends React.Component {
-  handleChange = (event) => {
+  handleSliderChange = (event) => {
     this.props.ARIYearsChange(allARIInYearsValues[event.target.value]);
   }
 
+  handleARIAEPChange = (event) => {
+    this.props.ARIAEPdisplayToggle();
+  }
+
   //defaultValue should come from value of state
+
+  ARIAEPdisplay = () => {
+    if (this.props.display_ARI_or_AEP === 'ARI') {
+      return <label htmlFor="ari_selector">{ this.props.ARI_years } years</label>;
+    } else {
+      return <label htmlFor="ari_selector">{ equivalentAEPValues[this.props.ARI_years] }%</label>;
+    }
+  }
+
   render() {
     return <div>
       <div>
-        <span className="font-bold"><label htmlFor="ari_selector">Average Return Interval</label></span> (or <a href="#a">use AEP</a>)
+        <span className="font-bold"><label htmlFor="ari_selector">{ this.props.display_ARI_or_AEP === 'ARI' ? 'Average Return Interval' : 'Annual Exceedance Probability' }</label></span> (or <span class="link" onClick={this.handleARIAEPChange}>use { this.props.display_ARI_or_AEP === 'ARI' ? 'AEP' : 'ARI' }</span>)
       </div>
       <div className="pl-3">
-        <input type="range" id="ari_selector" min="0" max="11" defaultValue="5" className="mr-2" onChange={this.handleChange} />
-        <label htmlFor="ari_selector">{ this.props.ARI_years } years</label>
+        <input type="range" id="ari_selector" min="0" max="11" defaultValue="5" className="mr-2" onChange={this.handleSliderChange} />
+        <this.ARIAEPdisplay />
       </div>
     </div>
   }
@@ -40,10 +67,13 @@ class ARI extends React.Component {
 
 
 const mapStateToProps = state => {
-  return { ARI_years: state.core.ARI_years };
+  return {
+    ARI_years: state.core.ARI_years,
+    display_ARI_or_AEP: state.core.display_ARI_or_AEP,
+  };
 };
 
 export default connect(
   mapStateToProps,
-  { ARIYearsChange }
+  { ARIYearsChange, ARIAEPdisplayToggle }
 )(ARI);
