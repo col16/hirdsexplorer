@@ -13,6 +13,13 @@ function App() {
           <ARI />
 
           <Duration />
+
+          <div className="text-xs text-gray-600 pt-3 pl-0.5">
+            We can't take any liability for the accuracy of this data. Always treat <a href="https://hirds.niwa.co.nz/">the HIRDS website</a> as the source of truth.
+          </div>
+          <div className="text-xs pl-0.5 pt-1">
+            <a href="/about/">About this website</a>
+          </div>
           
         </div>
         <div className="flex-grow h-16 bg-gray-200">
