@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  ARI_years: 100,
+  ARI_years: 10,
   display_ARI_or_AEP: 'ARI',
-  duration_hours: 24,
+  duration_hours: 1,
   current_display: 'HIRDSv4',
 };
 

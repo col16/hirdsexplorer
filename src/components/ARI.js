@@ -42,8 +42,6 @@ class ARI extends React.Component {
     this.props.ARIAEPdisplayToggle();
   }
 
-  //defaultValue should come from value of state
-
   ARIAEPdisplay = () => {
     if (this.props.display_ARI_or_AEP === 'ARI') {
       return <label htmlFor="ari_selector">{ this.props.ARI_years } years</label>;
@@ -58,7 +56,7 @@ class ARI extends React.Component {
         <span className="font-bold"><label htmlFor="ari_selector">{ this.props.display_ARI_or_AEP === 'ARI' ? 'Average Return Interval' : 'Annual Exceedance Probability' }</label></span> (or <span class="link" onClick={this.handleARIAEPChange}>use { this.props.display_ARI_or_AEP === 'ARI' ? 'AEP' : 'ARI' }</span>)
       </div>
       <div className="pl-3">
-        <input type="range" id="ari_selector" min="0" max="11" defaultValue="5" className="mr-2" onChange={this.handleSliderChange} />
+        <input type="range" id="ari_selector" min="0" max="11" defaultValue="3" className="mr-2" onChange={this.handleSliderChange} />
         <this.ARIAEPdisplay />
       </div>
     </div>

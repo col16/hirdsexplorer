@@ -4,6 +4,13 @@
 - Feedback (Comments, issues or feature requests)
 
 
+# Misc
+
+- Save state to localStorage, and load when user loads page
+
+
+
+
 # Packages to use
 https://react-leaflet.js.org/
 

@@ -38,14 +38,13 @@ class ARI extends React.Component {
     this.props.durationHoursChange(allDurationInHoursValues[event.target.value]);
   }
 
-  //defaultValue should come from value of state
   render() {
     return <div>
       <div>
         <span className="font-bold"><label htmlFor="ari_selector">Duration</label></span>
       </div>
       <div className="pl-3">
-        <input type="range" id="ari_selector" min="0" max="11" defaultValue="5" className="mr-2" onChange={this.handleChange} />
+        <input type="range" id="ari_selector" min="0" max="11" defaultValue="3" className="mr-2" onChange={this.handleChange} />
         <label htmlFor="ari_selector">{ friendlyDurationValues[this.props.duration_hours] }</label>
       </div>
     </div>
