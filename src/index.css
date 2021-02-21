@@ -16,3 +16,7 @@
     @apply text-xl;
   }
 }
+
+.leaflet-map {
+  height: 600px;
+}
