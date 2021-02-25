@@ -2,7 +2,7 @@ import './App.css';
 
 import ARI from "./components/ARI"
 import Duration from "./components/duration"
-import LeafletMap from "./components/map"
+import LeafletMap from "./components/Map"
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
           </div>
           
         </div>
-        <div className="flex-grow bg-gray-200">
+        <div className="flex-grow bg-gray-200" id="map-container">
           <LeafletMap />
         </div>
       </div>

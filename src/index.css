@@ -17,6 +17,10 @@
   }
 }
 
-.leaflet-map {
-  height: 600px;
+html, body {
+  height: 100%;
+}
+
+#map-container {
+  height: 100vh;
 }
