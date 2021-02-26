@@ -2,10 +2,28 @@ import "leaflet/dist/leaflet.css";
 import "./Map.css";
 
 import React, {useEffect, useRef, useState} from 'react';
+import { connect } from 'react-redux'
 import L from "leaflet";
 import GLOperations from 'leaflet.tilelayer.gloperations';
 import { addValueDisplay } from '../leaflet/valuedisplay.js';
 import '../leaflet/messagebox.js';
+
+import minMaxList from './minmax.js'
+
+let minMaxLookup = {};
+minMaxList.forEach(function (element) {
+  const ari = element[0];
+  const duration = element[1];
+  const min = element[2];
+  const max = element[3];
+
+  if (minMaxLookup[ari]) {
+    minMaxLookup[ari][duration] = [min, max];
+  } else {
+    minMaxLookup[ari] = {}
+    minMaxLookup[ari][duration] = [min, max];
+  }
+});
 
 function createMap(element) {
   const map = L.map(element, {
@@ -15,19 +33,45 @@ function createMap(element) {
   return map;
 }
 
-function Map({}) {
+function getTileURL(duration_hours, ARI_years) {
+  let a = '', d = '';
+  if (ARI_years >= 2) {
+    a = ARI_years.toFixed(1);
+  } else {
+    a = ARI_years.toFixed(2);
+  }
+  if (duration_hours >= 0.5) {
+    d = duration_hours.toFixed(1);
+  } else {
+    d = duration_hours.toPrecision(6);
+  }
+  return '/private/var/cameron/hirdsexplorer/build/'+a+'yr/'+d+'hr/{z}/{x}/{y}.png';
+}
+
+function Map({duration_hours, ARI_years}) {
   const [map, setMap] = useState();
+  const [GLLayer, setGLLayer] = useState();
+  const [min, max] = minMaxLookup[ARI_years][duration_hours];
 
   //initial setup of map
   const mapRef = useRef(null);
   useEffect(() => {
-    let a = createMap(mapRef.current);
-    setMap(a);
-  }, []);
+    if (!map) {
+      let a = createMap(mapRef.current);
+      setMap(a);
+    }
+
+    return () => { //"clean up" function
+      if (map && map.remove) {
+        map.remove();
+      }
+    };
+  }, [map]);
 
   const valueDisplayRef = useRef(null);
   useEffect(() => {
     if (map) {
+      console.log("rendered map");
 
       valueDisplayRef.current = addValueDisplay(map);
 
@@ -38,62 +82,55 @@ function Map({}) {
         }
       ).addTo(map);
 
+      const tileURL = getTileURL(duration_hours, ARI_years);
       const tilelayer = new GLOperations({
-        url: '/private/var/cameron/hirdsexplorer/build/{z}/{x}/{y}.png',
+        url: tileURL,
         colorScale: [
-          { offset: 0, color: 'rgb(255, 0, 0)' },
-          { offset: 950, color: 'rgb(0, 0, 255)' },
+          { offset: min, color: 'rgb(255, 0, 0)' },
+          { offset: max, color: 'rgb(0, 0, 255)' },
         ],
-        nodataValue: 0,
+        nodataValue: -10000,
         minNativeZoom: 5,
         maxNativeZoom: 5,
         onmousemove: updateValueDisplay,
+        tileFormat: 'dem',
+        transitions: false,
       }).addTo(map);
-      //setTilelayer(tilelayer);
-      //window.tilelayer = tilelayer;
+      console.log(tileURL, min, max);
+      setGLLayer(tilelayer);
 
-      // set up messagebox
-      //const hsAdvLoadingMessage = L.control.messagebox({
-      //  position: 'topleft',
-      //  timeout: 1200000,
-      //}).addTo(map);
-
-      //map.on("calcHsAdvanced", function(data) {
-      //  if (data.status) {
-      //    hsAdvLoadingMessage.options.timeout = 1200000;
-      //    hsAdvLoadingMessage.show('Calculating hillshading...');
-      //  } else {
-      //    hsAdvLoadingMessage.options.timeout = 2000;
-      //    hsAdvLoadingMessage.show('Calculating hillshading...done');
-      //  }
-      //});
     }
   }, [map]);
 
+
+  useEffect(() => {
+    if (GLLayer) {
+      console.log("update tile layer");
+      const tileURL = getTileURL(duration_hours, ARI_years);
+      GLLayer.updateOptions({
+        url: tileURL,
+        colorScale: [
+          { offset: min, color: 'rgb(255, 0, 0)' },
+          { offset: max, color: 'rgb(0, 0, 255)' },
+        ],
+      });
+      console.log(tileURL, min, max);
+    } else {
+      console.log("no GL layer yet");
+    }
+  }, [GLLayer, duration_hours, ARI_years, min, max]);
+
   // function to update the value display when the mouse hovers over pixels
-  function updateValueDisplay(mouseEvent, VALUE_DISPLAY_PRECISION=2) {
+  function updateValueDisplay(mouseEvent, VALUE_DISPLAY_PRECISION=1) {
     var pixelValue = mouseEvent.pixelValues.pixelValue;
-    let text = '';
-    let valueLen = Object.keys(mouseEvent.pixelValues).length;
-    if (valueLen === 1) {
-      // if no-data pixel, pixelValue will be `undefined`
-      if (pixelValue === undefined) {
-        text = '(undefined)';
-      } else if (typeof pixelValue === 'number') {
-        text = pixelValue.toFixed(VALUE_DISPLAY_PRECISION);
-      } else {
-          text = pixelValue.label;
-      }
-    } else if (valueLen === 3) {
-      text = pixelValue === undefined ? '' : 'Difference: ' + pixelValue.toFixed(VALUE_DISPLAY_PRECISION)
-                                          + '<br>Pressure year 2000: ' + mouseEvent.pixelValues.pixelValueA.toFixed(VALUE_DISPLAY_PRECISION)
-                                          + '<br>Pressure year 2003: ' + mouseEvent.pixelValues.pixelValueB.toFixed(VALUE_DISPLAY_PRECISION);
-    } else if (valueLen === 5) {
-      text = pixelValue === undefined ? '' : 'Result: ' + pixelValue.toFixed(VALUE_DISPLAY_PRECISION)
-                                          + '<br>Oil-thickness: ' + mouseEvent.pixelValues.pixelValueA.toFixed(VALUE_DISPLAY_PRECISION)
-                                          + '<br>STOIIP: ' + mouseEvent.pixelValues.pixelValueB.toFixed(VALUE_DISPLAY_PRECISION)
-                                          + '<br>Porosity: ' + mouseEvent.pixelValues.pixelValueC.toFixed(VALUE_DISPLAY_PRECISION)
-                                          + '<br>Permeability: ' + mouseEvent.pixelValues.pixelValueD.toFixed(VALUE_DISPLAY_PRECISION);
+    let text = ''
+    // if no-data pixel, pixelValue will be `undefined`
+    if (pixelValue === undefined) {
+      text = '';
+    } else if (typeof pixelValue === 'number') {
+      text = 'Approx. ' + pixelValue.toFixed(VALUE_DISPLAY_PRECISION) + ' mm';
+    } else {
+        text = pixelValue.label;
     }
     valueDisplayRef.current.update(text);
   }
@@ -103,4 +140,14 @@ function Map({}) {
   );
 }
 
-export default Map;
+const mapStateToProps = state => {
+  return {
+    duration_hours: state.core.duration_hours,
+    ARI_years: state.core.ARI_years,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  {  }
+)(Map);

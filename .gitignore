@@ -19,6 +19,7 @@
 .env.production.local
 .eslintcache
 *.pdf
+public/*yr/
 
 npm-debug.log*
 yarn-debug.log*
