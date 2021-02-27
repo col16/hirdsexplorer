@@ -9,6 +9,7 @@ import { addValueDisplay } from '../leaflet/valuedisplay.js';
 import '../leaflet/messagebox.js';
 
 import minMaxList from './minmax.js'
+import turbo_colormap_data from './turbo.js'
 
 let minMaxLookup = {};
 minMaxList.forEach(function (element) {
@@ -53,6 +54,22 @@ function getTileURL(duration_hours, ARI_years) {
   return '/private/var/cameron/hirdsexplorer/build/'+a+'yr/'+d+'hr/{z}/{x}/{y}.png';
 }
 
+function colourMapGenerator(min, max) {
+  let arr = [];
+  const step = (max - min) / (16 - 1);
+  for (var i = 0; i < 16; i++) {
+    const val = min + (step * i);
+    const colormap_row = turbo_colormap_data[i*17];
+    const r = Math.floor(colormap_row[0]*255);
+    const g = Math.floor(colormap_row[1]*255);
+    const b = Math.floor(colormap_row[2]*255);
+    const rgb = "rgb("+r.toString()+","+g.toString()+","+b.toString()+")";
+    arr.push({ offset: val, color: rgb });
+  }
+  return arr;
+}
+
+
 function Map({duration_hours, ARI_years}) {
   const [map, setMap] = useState();
   const [GLLayer, setGLLayer] = useState();
@@ -89,10 +106,7 @@ function Map({duration_hours, ARI_years}) {
       const tileURL = getTileURL(duration_hours, ARI_years);
       const tilelayer = new GLOperations({
         url: tileURL,
-        colorScale: [
-          { offset: min, color: 'rgb(255, 0, 0)' },
-          { offset: max, color: 'rgb(0, 0, 255)' },
-        ],
+        colorScale: colourMapGenerator(min, max),
         nodataValue: -10000,
         minNativeZoom: 6,
         maxNativeZoom: 6,
@@ -112,11 +126,9 @@ function Map({duration_hours, ARI_years}) {
       const tileURL = getTileURL(duration_hours, ARI_years);
       GLLayer.updateOptions({
         url: tileURL,
-        colorScale: [
-          { offset: min, color: 'rgb(255, 0, 0)' },
-          { offset: max, color: 'rgb(0, 0, 255)' },
-        ],
+        colorScale: colourMapGenerator(min, max),
       });
+    }
   }, [GLLayer, duration_hours, ARI_years, min, max]);
 
   // function to update the value display when the mouse hovers over pixels
