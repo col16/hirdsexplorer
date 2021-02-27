@@ -30,6 +30,11 @@ function createMap(element) {
     center: [-40.5, 173],
     zoom: 5,
   });
+  const southWest = new L.LatLng(-46.7, 166.5);
+  const northEast = new L.LatLng(-34.6, 178.2);
+  const bounds = new L.LatLngBounds(southWest, northEast);
+  map.fitBounds(bounds);
+
   return map;
 }
 
@@ -71,7 +76,6 @@ function Map({duration_hours, ARI_years}) {
   const valueDisplayRef = useRef(null);
   useEffect(() => {
     if (map) {
-      console.log("rendered map");
 
       valueDisplayRef.current = addValueDisplay(map);
 
@@ -90,22 +94,21 @@ function Map({duration_hours, ARI_years}) {
           { offset: max, color: 'rgb(0, 0, 255)' },
         ],
         nodataValue: -10000,
-        minNativeZoom: 5,
-        maxNativeZoom: 5,
+        minNativeZoom: 6,
+        maxNativeZoom: 6,
         onmousemove: updateValueDisplay,
         tileFormat: 'dem',
         transitions: false,
       }).addTo(map);
-      console.log(tileURL, min, max);
       setGLLayer(tilelayer);
 
+      L.control.scale().addTo(map);
     }
   }, [map]);
 
 
   useEffect(() => {
     if (GLLayer) {
-      console.log("update tile layer");
       const tileURL = getTileURL(duration_hours, ARI_years);
       GLLayer.updateOptions({
         url: tileURL,
@@ -114,10 +117,6 @@ function Map({duration_hours, ARI_years}) {
           { offset: max, color: 'rgb(0, 0, 255)' },
         ],
       });
-      console.log(tileURL, min, max);
-    } else {
-      console.log("no GL layer yet");
-    }
   }, [GLLayer, duration_hours, ARI_years, min, max]);
 
   // function to update the value display when the mouse hovers over pixels
