@@ -20,6 +20,7 @@
 .eslintcache
 *.pdf
 public/*yr/
+ignore/
 
 npm-debug.log*
 yarn-debug.log*
