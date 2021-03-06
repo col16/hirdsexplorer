@@ -69,6 +69,38 @@ function colourMapGenerator(min, max) {
   return arr;
 }
 
+function colourMapGenerator2(min, max) {
+  const colours = [
+    [8,8,255],
+    [36,50,255],
+    [54,94,255],
+    [59,140,255],
+    [54,191,255],
+    [23,243,255],
+    [97,255,221],
+    [153,255,173],
+    [185,255,138],
+    [220,255,92],
+    [248,255,38],
+    [255,225,0],
+    [255,183,0],
+    [255,136,0],
+    [255,89,0],
+    [255,47,0],
+  ];
+  let arr = [];
+  const step = (max - min) / (16 - 1);
+  for (var i = 0; i < 16; i++) {
+    const val = min + (step * i);
+    const r = colours[i][0];
+    const g = colours[i][1];
+    const b = colours[i][2];
+    const rgb = "rgb("+r.toString()+","+g.toString()+","+b.toString()+")";
+    arr.push({ offset: val, color: rgb });
+  }
+  return arr;
+}
+
 
 function Map({duration_hours, ARI_years}) {
   const [map, setMap] = useState();
@@ -106,7 +138,7 @@ function Map({duration_hours, ARI_years}) {
       const tileURL = getTileURL(duration_hours, ARI_years);
       const tilelayer = new GLOperations({
         url: tileURL,
-        colorScale: colourMapGenerator(min, max),
+        colorScale: colourMapGenerator2(min, max),
         nodataValue: -10000,
         minNativeZoom: 6,
         maxNativeZoom: 6,
@@ -126,7 +158,7 @@ function Map({duration_hours, ARI_years}) {
       const tileURL = getTileURL(duration_hours, ARI_years);
       GLLayer.updateOptions({
         url: tileURL,
-        colorScale: colourMapGenerator(min, max),
+        colorScale: colourMapGenerator2(min, max),
       });
     }
   }, [GLLayer, duration_hours, ARI_years, min, max]);
