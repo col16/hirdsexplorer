@@ -53,7 +53,7 @@ class ARI extends React.Component {
   render() {
     return <div>
       <div>
-        <span className="font-bold"><label htmlFor="ari_selector">{ this.props.display_ARI_or_AEP === 'ARI' ? 'Average Return Interval' : 'Annual Exceedance Probability' }</label></span> (or <span class="link" onClick={this.handleARIAEPChange}>use { this.props.display_ARI_or_AEP === 'ARI' ? 'AEP' : 'ARI' }</span>)
+        <span className="font-bold"><label htmlFor="ari_selector">{ this.props.display_ARI_or_AEP === 'ARI' ? 'Average Return Interval' : 'Annual Exceedance Probability' }</label></span> (or <span className="link" onClick={this.handleARIAEPChange}>use { this.props.display_ARI_or_AEP === 'ARI' ? 'AEP' : 'ARI' }</span>)
       </div>
       <div className="pl-3">
         <input type="range" id="ari_selector" min="0" max="11" defaultValue="3" className="mr-2" onChange={this.handleSliderChange} />
