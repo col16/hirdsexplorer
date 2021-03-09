@@ -51,7 +51,7 @@ function getTileURL(duration_hours, ARI_years) {
   } else {
     d = duration_hours.toPrecision(6);
   }
-  return '/private/var/cameron/hirdsexplorer/build/'+a+'yr/'+d+'hr/{z}/{x}/{y}.png';
+  return 'https://{s}.hirdsexplorer.nz/2km/'+a+'yr/'+d+'hr/{z}/{x}/{y}.png';
 }
 
 function colourMapGenerator(min, max) {
