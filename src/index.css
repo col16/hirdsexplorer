@@ -9,13 +9,15 @@
   a:hover, .link:hover {
     text-decoration: underline;
   }
+  .link {
+    cursor: pointer;
+  }
   h1 {
     @apply text-2xl;
   }
   h2 {
     @apply text-xl;
   }
-
 }
 
 html, body {
@@ -36,4 +38,8 @@ html, body {
   #control-container {
     height: 100vh;
   }
+}
+
+#modal {
+  z-index:1001;
 }
