@@ -5,6 +5,7 @@ const initialState = {
   display_ARI_or_AEP: 'ARI',
   duration_hours: 1,
   current_display: 'HIRDSv4',
+  ui_about_modal_displayed: false,
 };
 
 const ARIslice = createSlice({
@@ -24,6 +25,12 @@ const ARIslice = createSlice({
     durationHoursChange(state, action) {
       state.duration_hours = action.payload;
     },
+    displayAboutModal(state, action) {
+      state.ui_about_modal_displayed = true;
+    },
+    hideAboutModal(state, action) {
+      state.ui_about_modal_displayed = false;
+    },
   }
 })
 
@@ -31,6 +38,8 @@ export const {
   ARIYearsChange,
   ARIAEPdisplayToggle,
   durationHoursChange,
+  displayAboutModal,
+  hideAboutModal,
 } = ARIslice.actions
 
 export default ARIslice.reducer

@@ -9,6 +9,9 @@
   a:hover, .link:hover {
     text-decoration: underline;
   }
+  .link {
+    cursor: pointer;
+  }
   h1 {
     @apply text-2xl;
   }
@@ -22,5 +25,21 @@ html, body {
 }
 
 #map-container {
-  height: 100vh;
+  height: 65vh;
+}
+#control-container {
+  height: 35vh;
+  overflow: scroll;
+}
+@media (min-width: 768px) {
+  #map-container {
+    height: 100vh;
+  }
+  #control-container {
+    height: 100vh;
+  }
+}
+
+#modal {
+  z-index:1001;
 }
