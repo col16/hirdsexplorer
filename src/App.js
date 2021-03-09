@@ -8,8 +8,10 @@ function App() {
   return (
     <div className="App">
 
-      <div className="flex pb-96">
-        <div className="flex-none w-96 p-2">
+      <div className="flex flex-col-reverse md:flex-row">
+        <div className="flex-none md:w-96 p-2" id="control-container">
+
+          <div>Plotting historical data</div>
 
           <ARI />
 
