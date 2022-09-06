@@ -9,7 +9,6 @@ import { addValueDisplay } from '../leaflet/valuedisplay.js';
 import '../leaflet/messagebox.js';
 
 import minMaxList from './minmax.js'
-import turbo_colormap_data from './turbo.js'
 
 let minMaxLookup = {};
 minMaxList.forEach(function (element) {
@@ -52,24 +51,20 @@ function getTileURL(duration_hours, ARI_years) {
     d = duration_hours.toPrecision(6);
   }
   return 'https://{s}.hirdsexplorer.nz/2km/'+a+'yr/'+d+'hr/{z}/{x}/{y}.png';
+  //return '/private/var/cameron/hirdsexplorer/build/'+a+'yr/'+d+'hr/{z}/{x}/{y}.png';
 }
 
-function colourMapGenerator(min, max) {
-  let arr = [];
-  const step = (max - min) / (16 - 1);
-  for (var i = 0; i < 16; i++) {
-    const val = min + (step * i);
-    const colormap_row = turbo_colormap_data[i*17];
-    const r = Math.floor(colormap_row[0]*255);
-    const g = Math.floor(colormap_row[1]*255);
-    const b = Math.floor(colormap_row[2]*255);
-    const rgb = "rgb("+r.toString()+","+g.toString()+","+b.toString()+")";
-    arr.push({ offset: val, color: rgb });
-  }
-  return arr;
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length === 1 ? "0" + hex : hex;
 }
 
-function colourMapGenerator2(min, max) {
+function rgbaToHex(r, g, b, a) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b) + componentToHex(Math.floor(a*255));
+}
+
+function colourMapGenerator2(min, max, alpha) {
+  if (alpha===undefined) { alpha = 1.0; }
   const colours = [
     [8,8,255],
     [36,50,255],
@@ -95,14 +90,14 @@ function colourMapGenerator2(min, max) {
     const r = colours[i][0];
     const g = colours[i][1];
     const b = colours[i][2];
-    const rgb = "rgb("+r.toString()+","+g.toString()+","+b.toString()+")";
-    arr.push({ offset: val, color: rgb });
+    const rgba = rgbaToHex(r, g, b, alpha);
+    arr.push({ offset: val, color: rgba });
   }
   return arr;
 }
 
 
-function Map({duration_hours, ARI_years}) {
+function Map({duration_hours, ARI_years, transparency}) {
   const [map, setMap] = useState();
   const [GLLayer, setGLLayer] = useState();
   const [min, max] = minMaxLookup[ARI_years][duration_hours];
@@ -128,8 +123,8 @@ function Map({duration_hours, ARI_years}) {
 
       valueDisplayRef.current = addValueDisplay(map);
 
-      const basemapTiles = L.tileLayer(
-        'https://basemaps.linz.govt.nz/v1/tiles/aerial/EPSG:3857/{z}/{x}/{y}.webp?api=c01ex52jg5zg9mg8m5ar85vbm6t',
+      L.tileLayer(
+        'https://basemaps.linz.govt.nz/v1/tiles/aerial/EPSG:3857/{z}/{x}/{y}.webp?api=c01gc8g89smfmkv3d6txzxnj4je',
         {
           attribution: '<a href="https://www.linz.govt.nz/data/linz-data/linz-basemaps/data-attribution">LINZ CC BY 4.0 © Imagery Basemap contributors</a>'
         }
@@ -145,6 +140,7 @@ function Map({duration_hours, ARI_years}) {
         onmousemove: updateValueDisplay,
         tileFormat: 'dem',
         transitions: false,
+        //debug: true,
       }).addTo(map);
       setGLLayer(tilelayer);
 
@@ -152,16 +148,15 @@ function Map({duration_hours, ARI_years}) {
     }
   }, [map]);
 
-
   useEffect(() => {
     if (GLLayer) {
       const tileURL = getTileURL(duration_hours, ARI_years);
       GLLayer.updateOptions({
         url: tileURL,
-        colorScale: colourMapGenerator2(min, max),
+        colorScale: colourMapGenerator2(min, max, transparency),
       });
     }
-  }, [GLLayer, duration_hours, ARI_years, min, max]);
+  }, [GLLayer, duration_hours, ARI_years, min, max, transparency]);
 
   // function to update the value display when the mouse hovers over pixels
   function updateValueDisplay(mouseEvent, VALUE_DISPLAY_PRECISION=1) {
@@ -187,6 +182,7 @@ const mapStateToProps = state => {
   return {
     duration_hours: state.core.duration_hours,
     ARI_years: state.core.ARI_years,
+    transparency: state.core.transparency,
   };
 };
 

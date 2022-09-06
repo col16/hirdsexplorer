@@ -4,6 +4,7 @@ import './App.css';
 
 import ARI from "./components/ARI"
 import Duration from "./components/duration"
+import Transparency from "./components/Transparency"
 import LeafletMap from "./components/Map"
 import AboutModal from "./components/AboutModal"
 import { displayAboutModal } from './redux/reducers/core'
@@ -20,6 +21,8 @@ function App(props) {
           <ARI />
 
           <Duration />
+
+          <Transparency />
 
           <div className="text-xs pt-3 pb-4 pl-0.5">
             Historical climate data plotted.
