@@ -41,11 +41,11 @@ class ARI extends React.Component {
   render() {
     return <div>
       <div>
-        <span className="font-bold"><label htmlFor="ari_selector">Duration</label></span>
+        <span className="font-bold"><label htmlFor="duration_selector">Duration</label></span>
       </div>
       <div className="pl-3">
-        <input type="range" id="ari_selector" min="0" max="11" defaultValue="3" className="mr-2" onChange={this.handleChange} />
-        <label htmlFor="ari_selector">{ friendlyDurationValues[this.props.duration_hours] }</label>
+        <input type="range" id="duration_selector" min="0" max="11" defaultValue="3" className="mr-2" onChange={this.handleChange} />
+        <label htmlFor="duration_selector">{ friendlyDurationValues[this.props.duration_hours] }</label>
       </div>
     </div>
   }
